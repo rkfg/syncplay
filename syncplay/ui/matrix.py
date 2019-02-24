@@ -24,7 +24,10 @@ class Matrix(Thread):
     def incoming_message(self, chunk):
         if (chunk["type"] == "m.room.message" and chunk["room_id"] == self.room_id and chunk["sender"] == self.user_id and 
         chunk["content"]["body"][:1] != '<'):
-            self.ui.chatInput.setText(chunk["content"]["body"])
+            body = chunk["content"]["body"]
+            if body[:1] == '|':
+                body = '/' + body[1:]
+            self.ui.chatInput.setText(body)
             self.ui.chatButton.click()
 
     def send_message(self, text):

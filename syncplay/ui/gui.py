@@ -21,6 +21,7 @@ from syncplay.utils import formatTime, sameFilename, sameFilesize, sameFiledurat
 from syncplay.vendor import Qt
 from syncplay.vendor.Qt import QtCore, QtWidgets, QtGui, __binding__, __binding_version__, __qt_version__, IsPySide, IsPySide2
 from syncplay.vendor.Qt.QtCore import Qt, QSettings, QSize, QPoint, QUrl, QLine, QDateTime
+from syncplay.ui.matrix import Matrix
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
     QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
 if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
@@ -461,6 +462,12 @@ class MainWindow(QtWidgets.QMainWindow):
         except:
             self.showErrorMessage("Failed to load some settings.")
         self.automaticUpdateCheck()
+        cfg = self._syncplayClient.getConfig()
+        if cfg['matrixEnable'] and cfg['matrixName'] and cfg['matrixAccessKey'] and cfg['matrixRoom']:
+            self.matrix = Matrix(self, "https://" + cfg['matrixName'].split(':')[-1:][0],
+                                    cfg['matrixAccessKey'],
+                                    cfg['matrixName'],
+                                    cfg['matrixRoom'])
 
     def promptFor(self, prompt=">", message=""):
         # TODO: Prompt user
@@ -491,6 +498,8 @@ class MainWindow(QtWidgets.QMainWindow):
         messageWithUsername = re.match(constants.MESSAGE_WITH_USERNAME_REGEX, message, re.UNICODE)
         if messageWithUsername:
             username = messageWithUsername.group("username")
+            if self.matrix and username != self._syncplayClient.getUsername():
+                self.matrix.send_message(message)
             message = messageWithUsername.group("message")
         message = message.replace("&", "&amp;").replace('"', "&quot;").replace("<", "&lt;").replace(">", "&gt;")
         if username:
@@ -902,6 +911,8 @@ class MainWindow(QtWidgets.QMainWindow):
     @needsClient
     def exitSyncplay(self):
         self._syncplayClient.stop()
+        if self.matrix:
+            self.matrix.stop()
 
     def closeEvent(self, event):
         self.exitSyncplay()
@@ -1885,3 +1896,4 @@ class MainWindow(QtWidgets.QMainWindow):
         self.show()
         self.setAcceptDrops(True)
         self.clearedPlaylistNote = False
+        self.matrix = None

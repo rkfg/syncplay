@@ -493,4 +493,14 @@ en = {
 
     "playlist-instruction-item-message": "Drag file here to add it to the shared playlist.",
     "sharedplaylistenabled-tooltip": "Room operators can add files to a synced playlist to make it easy for everyone to watching the same thing. Configure media directories under 'Misc'.",
+    "matrix-label": "Matrix",
+    "matrix-settings-title": "Matrix settings",
+    "matrixname-label": "Your Matrix ID",
+    "matrixname-tooltip": "Your MXID in format @username:homeserver.org",
+    "matrixaccesskey-label": "Access key",
+    "matrixaccesskey-tooltip": "You can find it in Riot settings => Help & About => Access Token: <click to reveal>",
+    "matrixroom-label": "Room address",
+    "matrixroom-tooltip": "Internal room address, you can find it in Riot room settings => Advanced => Internal room ID",
+    "matrixenable-label": "Enable Matrix chat support",
+    "matrixenable-tooltip": "If enabled, chat messages will be forwarded to and from the specified room",
 }

@@ -437,6 +437,7 @@ class ConfigDialog(QtWidgets.QDialog):
         else:
             self.config['file'] = str(self.mediapathTextbox.text())
         self.config['publicServers'] = self.publicServerAddresses
+        self.config['matrixAccessKey'] = self.matrixAccessKeyTextEdit.toPlainText()
 
         self.pressedclosebutton = False
         self.close()
@@ -891,6 +892,43 @@ class ConfigDialog(QtWidgets.QDialog):
         self.syncSettingsLayout.setAlignment(Qt.AlignTop)
         self.stackedLayout.addWidget(self.syncSettingsFrame)
 
+    def addMatrixTab(self):
+        self.matrixFrame = QtWidgets.QFrame()
+        self.matrixLayout = QtWidgets.QVBoxLayout()
+        self.matrixFrame.setLayout(self.matrixLayout)
+
+        self.matrixSettingsGroup = QtWidgets.QGroupBox(getMessage("matrix-settings-title"))
+        self.matrixSettingsLayout = QtWidgets.QGridLayout()
+        self.matrixSettingsGroup.setLayout(self.matrixSettingsLayout)
+
+        self.matrixEnableCheckbox = QCheckBox(getMessage("matrixenable-label"))
+        self.matrixEnableCheckbox.setObjectName("matrixEnable")
+
+        self.matrixUsernameLabel = QLabel(getMessage("matrixname-label"), self)
+        self.matrixUsernameTextbox = QLineEdit(self)
+        self.matrixUsernameTextbox.setObjectName("matrixName")
+
+        self.matrixAccessKeyLabel = QLabel(getMessage("matrixaccesskey-label"), self)
+        self.matrixAccessKeyTextEdit = QPlainTextEdit(self.config['matrixAccessKey'])
+        self.matrixAccessKeyTextEdit.setObjectName(constants.LOAD_SAVE_MANUALLY_MARKER + "matrixAccessKey")
+        self.matrixAccessKeyTextEdit.setLineWrapMode(QtWidgets.QPlainTextEdit.WidgetWidth)
+
+        self.matrixRoomLabel = QLabel(getMessage("matrixroom-label"), self)
+        self.matrixRoomTextbox = QLineEdit()
+        self.matrixRoomTextbox.setObjectName("matrixRoom")
+
+        self.matrixSettingsLayout.addWidget(self.matrixEnableCheckbox, 0, 0, 1, 2)
+        self.matrixSettingsLayout.addWidget(self.matrixUsernameLabel, 1, 0)
+        self.matrixSettingsLayout.addWidget(self.matrixUsernameTextbox, 1, 1)
+        self.matrixSettingsLayout.addWidget(self.matrixRoomLabel, 2, 0)
+        self.matrixSettingsLayout.addWidget(self.matrixRoomTextbox, 2, 1)
+        self.matrixSettingsLayout.addWidget(self.matrixAccessKeyLabel, 3, 0)
+        self.matrixSettingsLayout.addWidget(self.matrixAccessKeyTextEdit, 3, 1)
+
+        self.matrixLayout.addWidget(self.matrixSettingsGroup)
+        self.matrixLayout.setAlignment(Qt.AlignTop)
+        self.stackedLayout.addWidget(self.matrixFrame)
+
     def addChatTab(self):
         self.chatFrame = QtWidgets.QFrame()
         self.chatLayout = QtWidgets.QVBoxLayout()
@@ -1183,6 +1221,7 @@ class ConfigDialog(QtWidgets.QDialog):
         self.tabListWidget.addItem(QtWidgets.QListWidgetItem(QtGui.QIcon(resourcespath + "film_link.png"), getMessage("sync-label")))
         self.tabListWidget.addItem(QtWidgets.QListWidgetItem(QtGui.QIcon(resourcespath + "user_comment.png"), getMessage("chat-label")))
         self.tabListWidget.addItem(QtWidgets.QListWidgetItem(QtGui.QIcon(resourcespath + "error.png"), getMessage("messages-label")))
+        self.tabListWidget.addItem(QtWidgets.QListWidgetItem(QtGui.QIcon(resourcespath + "comments.png"), getMessage("matrix-label")))
         self.tabListWidget.addItem(QtWidgets.QListWidgetItem(QtGui.QIcon(resourcespath + "cog.png"), getMessage("misc-label")))
         self.tabListLayout.addWidget(self.tabListWidget)
         self.tabListFrame.setLayout(self.tabListLayout)
@@ -1310,6 +1349,7 @@ class ConfigDialog(QtWidgets.QDialog):
         self.addSyncTab()
         self.addChatTab()
         self.addMessageTab()
+        self.addMatrixTab()
         self.addMiscTab()
         self.tabList()
 

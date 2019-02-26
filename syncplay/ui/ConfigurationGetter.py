@@ -97,6 +97,8 @@ class ConfigurationGetter(object):
             "matrixName": "",
             "matrixRoom": "",
             "matrixAccessKey": "",
+            "autosymlinkEnabled": False,
+            "autosymlinkThreshold": 0.9
         }
 
         self._defaultConfig = self._config.copy()
@@ -146,6 +148,7 @@ class ConfigurationGetter(object):
             "chatOutputEnabled",
             "chatOutputFontUnderline",
             "matrixEnabled",
+            "autosymlinkEnabled",
         ]
         self._tristate = [
             "checkForUpdatesAutomatically",
@@ -175,7 +178,8 @@ class ConfigurationGetter(object):
             "chatOSDMargin",
             "notificationTimeout",
             "alertTimeout",
-            "chatTimeout"
+            "chatTimeout",
+            "autosymlinkThreshold"
         ]
 
         self._hexadecimal = [
@@ -197,7 +201,7 @@ class ConfigurationGetter(object):
                 "sharedPlaylistEnabled", "loopAtEndOfPlaylist",
                 "loopSingleFiles",
                 "onlySwitchToTrustedDomains", "trustedDomains", "publicServers", "matrixEnabled",
-                "matrixName", "matrixRoom", "matrixAccessKey"],
+                "matrixName", "matrixRoom", "matrixAccessKey", "autosymlinkEnabled", "autosymlinkThreshold"],
             "gui": [
                 "showOSD", "showOSDWarnings", "showSlowdownOSD",
                 "showDifferentRoomOSD", "showSameRoomOSD",

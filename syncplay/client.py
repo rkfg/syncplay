@@ -16,6 +16,7 @@ from twisted.application.internet import ClientService
 from twisted.internet.endpoints import HostnameEndpoint
 from twisted.internet.protocol import ClientFactory
 from twisted.internet import reactor, task, defer, threads
+from difflib import SequenceMatcher
 
 try:
     import certifi
@@ -1830,6 +1831,16 @@ class SyncplayPlaylist():
         return self._previousPlaylist != self._playlist and self._playlist != newPlaylist
 
 
+def makeSymlink(src, dst):
+    if os.path.abspath(src) == os.path.abspath(dst):
+        return True
+    try:
+        os.symlink(src, dst)
+        return True
+    except:
+        print("Couldn't create symlink:", src, "=>", dst)
+        return False
+
 class FileSwitchManager(object):
     def __init__(self, client):
         self._client = client
@@ -1935,13 +1946,30 @@ class FileSwitchManager(object):
         if self._client.userlist.currentUser.file and utils.sameFilename(filename, self._client.userlist.currentUser.file['name']):
             return self._client.userlist.currentUser.file['path']
 
+        s = SequenceMatcher()
+        s.set_seq1(filename)
         if self.mediaFilesCache is not None:
+            matches = []
             for directory in self.mediaFilesCache:
                 files = self.mediaFilesCache[directory]
-                if len(files) > 0 and filename in files:
-                    filepath = os.path.join(directory, filename)
-                    if os.path.isfile(filepath):
-                        return filepath
+                if len(files) > 0:
+                    if filename in files:
+                        filepath = os.path.join(directory, filename)
+                        if os.path.isfile(filepath):
+                            return filepath
+                    if self._client.getConfig()['autosymlinkEnabled']:
+                        for f in files:
+                            s.set_seq2(f)
+                            ratio = s.ratio()
+                            if ratio > self._client.getConfig()['autosymlinkThreshold']:
+                                filepath = os.path.join(directory, f)
+                                if os.path.isfile(filepath) and not os.path.islink(filepath):
+                                    matches.append((ratio, os.path.join(directory, filename), filepath))
+
+            if len(matches):
+                bestmatch = max(matches, key = lambda x: x[0])
+                if len(bestmatch) and makeSymlink(bestmatch[2], bestmatch[1]):
+                    return bestmatch[1]
 
         if highPriority and self.folderSearchEnabled and self.mediaDirectories is not None:
             directoryList = self.mediaDirectories
@@ -1961,14 +1989,27 @@ class FileSwitchManager(object):
 
             startTime = time.time()
             if filename and directoryList:
+                matches = []
                 for directory in directoryList:
                     for root, dirs, files in os.walk(directory):
                         if filename in files:
                             return os.path.join(root, filename)
+                        if self._client.getConfig()['autosymlinkEnabled']:
+                            for f in files:
+                                s.set_seq2(f)
+                                ratio = s.ratio()
+                                if ratio > self._client.getConfig()['autosymlinkThreshold']:
+                                    filepath = os.path.join(root, f)
+                                    if os.path.isfile(filepath) and not os.path.islink(filepath):
+                                        matches.append((ratio, os.path.join(root, filename), filepath))
                         if time.time() - startTime > constants.FOLDER_SEARCH_TIMEOUT:
                             self.folderSearchEnabled = False
                             self.directorySearchError = getMessage("folder-search-timeout-error").format(directory)
                             return None
+                if len(matches):
+                    bestmatch = max(matches, key = lambda x: x[0])
+                    if len(bestmatch) and makeSymlink(bestmatch[2], bestmatch[1]):
+                        return bestmatch[1]
             return None
 
     def areWatchedFilenamesInCache(self):

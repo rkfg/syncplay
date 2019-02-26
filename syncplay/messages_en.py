@@ -493,4 +493,12 @@ en = {
 
     "playlist-instruction-item-message": "Drag file here to add it to the shared playlist.",
     "sharedplaylistenabled-tooltip": "Room operators can add files to a synced playlist to make it easy for everyone to watching the same thing. Configure media directories under 'Misc'.",
+    "autosymlink-title": "Automatic symlinks",
+    "autosymlinkenabled-label": "Automatically create symlinks to similar files",
+    "autosymlinkenabled-tooltip": "If there's a file with a similar name in your media directories, SyncPlay will create a symlink with the desired name automatically. This is helpful if the shared playlist contains slightly different filenames than yours (like [1080p] and your files are tagged [720p]).",
+    "autosymlink-threshold-label": "Ratio threshold",
+    "autosymlinkthreshold-tooltip": "0 - absolutely different names, 1 - identical names. 0.9 should be ok for minor differences.",
+    "autosymlink-tryit": "Try it! Filename A:",
+    "autosymlink-tryit-b": "Filename B:",
+    "autosymlink-tryit-ratio": "Ratio: "
 }

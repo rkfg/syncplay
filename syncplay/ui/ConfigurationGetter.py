@@ -92,7 +92,9 @@ class ConfigurationGetter(object):
             "notificationTimeout": 3,
             "alertTimeout": 5,
             "chatTimeout": 7,
-            "publicServers": []
+            "publicServers": [],
+            "autosymlinkEnabled": False,
+            "autosymlinkThreshold": 0.9
         }
 
         self._defaultConfig = self._config.copy()
@@ -140,7 +142,8 @@ class ConfigurationGetter(object):
             "chatDirectInput",
             "chatMoveOSD",
             "chatOutputEnabled",
-            "chatOutputFontUnderline"
+            "chatOutputFontUnderline",
+            "autosymlinkEnabled",
         ]
         self._tristate = [
             "checkForUpdatesAutomatically",
@@ -170,7 +173,8 @@ class ConfigurationGetter(object):
             "chatOSDMargin",
             "notificationTimeout",
             "alertTimeout",
-            "chatTimeout"
+            "chatTimeout",
+            "autosymlinkThreshold"
         ]
 
         self._hexadecimal = [
@@ -191,7 +195,8 @@ class ConfigurationGetter(object):
                 "autoplayInitialState", "mediaSearchDirectories",
                 "sharedPlaylistEnabled", "loopAtEndOfPlaylist",
                 "loopSingleFiles",
-                "onlySwitchToTrustedDomains", "trustedDomains", "publicServers"],
+                "onlySwitchToTrustedDomains", "trustedDomains", "publicServers",
+                "autosymlinkEnabled", "autosymlinkThreshold"],
             "gui": [
                 "showOSD", "showOSDWarnings", "showSlowdownOSD",
                 "showDifferentRoomOSD", "showSameRoomOSD",

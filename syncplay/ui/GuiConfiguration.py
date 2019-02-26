@@ -15,6 +15,7 @@ from syncplay.vendor.Qt import QtCore, QtWidgets, QtGui, __binding__, IsPySide, 
 from syncplay.vendor.Qt.QtCore import Qt, QSettings, QCoreApplication, QSize, QPoint, QUrl, QLine, QEventLoop, Signal
 from syncplay.vendor.Qt.QtWidgets import QApplication, QLineEdit, QLabel, QCheckBox, QButtonGroup, QRadioButton, QDoubleSpinBox, QPlainTextEdit
 from syncplay.vendor.Qt.QtGui import QCursor, QIcon, QImage, QDesktopServices
+from difflib import SequenceMatcher
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
     QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
 if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
@@ -419,6 +420,7 @@ class ConfigDialog(QtWidgets.QDialog):
         self.config["perPlayerArguments"] = self.perPlayerArgs
         self.config["mediaSearchDirectories"] = utils.convertMultilineStringToList(self.mediasearchTextEdit.toPlainText())
         self.config["trustedDomains"] = utils.convertMultilineStringToList(self.trusteddomainsTextEdit.toPlainText())
+        self.config["autosymlinkThreshold"] = self.autosymlinkThresholdSpinbox.value()
 
         if self.serverpassTextbox.isEnabled():
             self.config['password'] = self.serverpassTextbox.text()
@@ -794,6 +796,42 @@ class ConfigDialog(QtWidgets.QDialog):
         self.coreSettingsLayout.addWidget(self.filesizeprivacySendHashedOption, 4, 2, Qt.AlignLeft)
         self.coreSettingsLayout.addWidget(self.filesizeprivacyDontSendOption, 4, 3, Qt.AlignLeft)
 
+        self.autosymlinkSettingsGroup = QtWidgets.QGroupBox(getMessage("autosymlink-title"))
+        self.autosymlinkSettingsLayout = QtWidgets.QGridLayout()
+        self.autosymlinkSettingsGroup.setLayout(self.autosymlinkSettingsLayout)
+        
+        self.autosymlinkCheckbox = QCheckBox(getMessage("autosymlinkenabled-label"))
+        self.autosymlinkCheckbox.setObjectName("autosymlinkEnabled")
+        self.autosymlinkThresholdSpinbox = QDoubleSpinBox()
+        self.autosymlinkThresholdSpinbox.setValue(self.config["autosymlinkThreshold"])
+        self.autosymlinkThresholdSpinbox.setObjectName(constants.LOAD_SAVE_MANUALLY_MARKER + "autosymlinkThreshold")
+        self.autosymlinkThresholdSpinbox.setMinimum(0)
+        self.autosymlinkThresholdSpinbox.setMaximum(1)
+        self.autosymlinkThresholdSpinbox.setSingleStep(0.01)
+        self.autosymlinkThresholdLabel = QLabel(getMessage("autosymlink-threshold-label"))
+
+        self.autosymlinkTestLabel = QLabel(getMessage("autosymlink-tryit"))
+        self.autosymlinkTestATextbox = QLineEdit()
+        self.autosymlinkTestLabelB = QLabel(getMessage("autosymlink-tryit-b"))
+        self.autosymlinkTestBTextbox = QLineEdit()
+        self.autosymlinkTestRatio = QLabel(getMessage("autosymlink-tryit-ratio") + "1.0")
+
+        def calcRatio(text):
+            s = SequenceMatcher(None, self.autosymlinkTestATextbox.text(), self.autosymlinkTestBTextbox.text())
+            self.autosymlinkTestRatio.setText(getMessage("autosymlink-tryit-ratio") + str(round(s.ratio(), 3)))
+
+        self.autosymlinkTestATextbox.textChanged.connect(calcRatio)
+        self.autosymlinkTestBTextbox.textChanged.connect(calcRatio)
+
+        self.autosymlinkSettingsLayout.addWidget(self.autosymlinkCheckbox, 0, 0, 1, 5)
+        self.autosymlinkSettingsLayout.addWidget(self.autosymlinkThresholdLabel, 1, 0)
+        self.autosymlinkSettingsLayout.addWidget(self.autosymlinkThresholdSpinbox, 1, 1)
+        self.autosymlinkSettingsLayout.addWidget(self.autosymlinkTestLabel, 2, 0)
+        self.autosymlinkSettingsLayout.addWidget(self.autosymlinkTestATextbox, 2, 1)
+        self.autosymlinkSettingsLayout.addWidget(self.autosymlinkTestLabelB, 2, 2)
+        self.autosymlinkSettingsLayout.addWidget(self.autosymlinkTestBTextbox, 2, 3)
+        self.autosymlinkSettingsLayout.addWidget(self.autosymlinkTestRatio, 2, 4)
+
         ## Syncplay internals
 
         self.internalSettingsGroup = QtWidgets.QGroupBox(getMessage("syncplay-internals-title"))
@@ -821,6 +859,7 @@ class ConfigDialog(QtWidgets.QDialog):
         self.mediasearchSettingsGroup.setMaximumHeight(self.mediasearchSettingsGroup.minimumSizeHint().height())
 
         self.miscLayout.addWidget(self.coreSettingsGroup)
+        self.miscLayout.addWidget(self.autosymlinkSettingsGroup)
         self.miscLayout.addWidget(self.internalSettingsGroup)
         self.miscLayout.addWidget(self.mediasearchSettingsGroup)
         self.miscLayout.setAlignment(Qt.AlignTop)

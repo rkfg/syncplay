@@ -901,8 +901,8 @@ class ConfigDialog(QtWidgets.QDialog):
         self.matrixSettingsLayout = QtWidgets.QGridLayout()
         self.matrixSettingsGroup.setLayout(self.matrixSettingsLayout)
 
-        self.matrixEnableCheckbox = QCheckBox(getMessage("matrixenable-label"))
-        self.matrixEnableCheckbox.setObjectName("matrixEnable")
+        self.matrixEnabledCheckbox = QCheckBox(getMessage("matrixenabled-label"))
+        self.matrixEnabledCheckbox.setObjectName("matrixEnabled")
 
         self.matrixUsernameLabel = QLabel(getMessage("matrixname-label"), self)
         self.matrixUsernameTextbox = QLineEdit(self)
@@ -917,7 +917,7 @@ class ConfigDialog(QtWidgets.QDialog):
         self.matrixRoomTextbox = QLineEdit()
         self.matrixRoomTextbox.setObjectName("matrixRoom")
 
-        self.matrixSettingsLayout.addWidget(self.matrixEnableCheckbox, 0, 0, 1, 2)
+        self.matrixSettingsLayout.addWidget(self.matrixEnabledCheckbox, 0, 0, 1, 2)
         self.matrixSettingsLayout.addWidget(self.matrixUsernameLabel, 1, 0)
         self.matrixSettingsLayout.addWidget(self.matrixUsernameTextbox, 1, 1)
         self.matrixSettingsLayout.addWidget(self.matrixRoomLabel, 2, 0)

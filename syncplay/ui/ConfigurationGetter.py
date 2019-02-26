@@ -93,10 +93,10 @@ class ConfigurationGetter(object):
             "alertTimeout": 5,
             "chatTimeout": 7,
             "publicServers": [],
-            "matrixEnable" : False,
-            "matrixName" : "",
-            "matrixRoom" : "",
-            "matrixAccessKey" : "",
+            "matrixEnabled": False,
+            "matrixName": "",
+            "matrixRoom": "",
+            "matrixAccessKey": "",
         }
 
         self._defaultConfig = self._config.copy()
@@ -145,7 +145,7 @@ class ConfigurationGetter(object):
             "chatMoveOSD",
             "chatOutputEnabled",
             "chatOutputFontUnderline",
-            "matrixEnable",
+            "matrixEnabled",
         ]
         self._tristate = [
             "checkForUpdatesAutomatically",
@@ -196,7 +196,7 @@ class ConfigurationGetter(object):
                 "autoplayInitialState", "mediaSearchDirectories",
                 "sharedPlaylistEnabled", "loopAtEndOfPlaylist",
                 "loopSingleFiles",
-                "onlySwitchToTrustedDomains", "trustedDomains", "publicServers", "matrixEnable",
+                "onlySwitchToTrustedDomains", "trustedDomains", "publicServers", "matrixEnabled",
                 "matrixName", "matrixRoom", "matrixAccessKey"],
             "gui": [
                 "showOSD", "showOSDWarnings", "showSlowdownOSD",

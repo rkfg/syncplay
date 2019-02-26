@@ -463,7 +463,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.showErrorMessage("Failed to load some settings.")
         self.automaticUpdateCheck()
         cfg = self._syncplayClient.getConfig()
-        if cfg['matrixEnable'] and cfg['matrixName'] and cfg['matrixAccessKey'] and cfg['matrixRoom']:
+        if cfg['matrixEnabled'] and cfg['matrixName'] and cfg['matrixAccessKey'] and cfg['matrixRoom']:
             self.matrix = Matrix(self, "https://" + cfg['matrixName'].split(':')[-1:][0],
                                     cfg['matrixAccessKey'],
                                     cfg['matrixName'],

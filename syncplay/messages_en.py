@@ -501,6 +501,6 @@ en = {
     "matrixaccesskey-tooltip": "You can find it in Riot settings => Help & About => Access Token: <click to reveal>",
     "matrixroom-label": "Room address",
     "matrixroom-tooltip": "Internal room address, you can find it in Riot room settings => Advanced => Internal room ID",
-    "matrixenable-label": "Enable Matrix chat support",
-    "matrixenable-tooltip": "If enabled, chat messages will be forwarded to and from the specified room",
+    "matrixenabled-label": "Enable Matrix chat support",
+    "matrixenabled-tooltip": "If enabled, chat messages will be forwarded to and from the specified room",
 }
